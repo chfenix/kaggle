@@ -1,5 +1,5 @@
 字段名,类型,有效属性,权重,中文说明,英文说明
-Id,/,,,,
+Id,,,,,
 SalePrice,,,,售价,
 MSSubClass,E,0,,参与销售住宅的类型:有年代新旧等信息,The building class
 MSZoning,E,0,,"房屋类型:农用,商用等",The general zoning classification
