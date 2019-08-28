@@ -13,6 +13,8 @@ print("SalePrice Empty\n" + str(data_train["SalePrice"].isnull().sum()))
 sns.distplot(data_train["SalePrice"])
 
 # 数据清洗
+# 查看数据
+
 # 填充空值
 
 print(data_train["MSZoning"].head(10))
