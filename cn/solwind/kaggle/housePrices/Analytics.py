@@ -22,7 +22,7 @@ from sklearn import preprocessing
 #  分析数据
 
 # 读取训练集
-data_train = pd.read_csv("../../../resources/train.csv")
+data_train = pd.read_csv("./data/train.csv")
 
 # 销售价分布
 print(data_train.SalePrice.describe())
@@ -31,7 +31,7 @@ print(data_train.SalePrice.describe())
 
 # 读取属性定义,生成属性类型字典
 dict_pro_type = {}
-f_pro_desc = open("../../../resources/pro_desc.csv", "r", encoding="gbk")
+f_pro_desc = open("./data/pro_desc.csv", "r", encoding="gbk")
 for line in f_pro_desc.readlines():
     line = line.strip()
     k = line.split(',')[0]
@@ -67,15 +67,16 @@ for x in f_names:
 
 # 绘制关系矩阵
 corrmat = data_train.corr()
-f, ax = plt.subplots(figsize=(20, 9))
+# f, ax = plt.subplots(figsize=(20, 9))
 # sns.heatmap(corrmat, vmax=0.8, square=True)
 
 k  = 10 # 关系矩阵中将显示10个特征
 cols = corrmat.nlargest(k, 'SalePrice')['SalePrice'].index  # 根据SalePrice截取相关度最大的k行
+print(cols)
 cm = np.corrcoef(data_train[cols].values.T)
 sns.set(font_scale=1.25)
-# hm = sns.heatmap(cm, cbar=True, annot=True,
-#                   square=True, fmt='.2f', annot_kws={'size': 10}, yticklabels=cols.values, xticklabels=cols.values,cmap="YlGnBu")
+hm = sns.heatmap(cm, cbar=True, annot=True,
+                  square=True, fmt='.2f', annot_kws={'size': 10}, yticklabels=cols.values, xticklabels=cols.values,cmap="YlGnBu")
 
 # 绘制选中列关系矩阵点图
 sns.set()
@@ -83,8 +84,8 @@ cols = ['SalePrice','OverallQual','GrLivArea', 'GarageCars','TotalBsmtSF', 'Full
 # sns.pairplot(data_train[cols], height = 2.5, kind="reg")
 
 # 获取数据
-# cols = ['OverallQual','GrLivArea', 'GarageCars','TotalBsmtSF', 'FullBath', 'TotRmsAbvGrd', 'YearBuilt']
-cols = ['GrLivArea']
+cols = ['OverallQual','GrLivArea', 'GarageCars','TotalBsmtSF', 'FullBath', 'TotRmsAbvGrd', 'YearBuilt']
+# cols = ['GrLivArea']
 x = data_train[cols].values
 print(x)
 y = data_train['SalePrice'].values
@@ -93,4 +94,4 @@ print(x_scaled)
 y_scaled = preprocessing.StandardScaler().fit_transform(y.reshape(-1,1))
 
 
-# plt.show()
+plt.show()

@@ -1,82 +1,82 @@
-字段名,类型,有效属性,权重,中文说明,英文说明
-Id,,,,,
-SalePrice,,,,售价,
-MSSubClass,E,0,,参与销售住宅的类型:有年代新旧等信息,The building class
-MSZoning,E,0,,"房屋类型:农用,商用等",The general zoning classification
-LotFrontage,N,9,,距离街道的距离,Linear feet of street connected to property
-LotArea,N,9,,房屋的面积,Lot size in square feet
-Street,E,0,,通向房屋的Street是用什么铺的,Type of road access
-Alley,E,0,,通向房屋的Alley是用什么铺的,Type of alley access
-LotShape,E,9,,"房屋的户型,规整程度",General shape of property
-LandContour,E,9,,房屋的平坦程度,Flatness of the property
-Utilities,E,9,,"设施,通不通水电气",Type of utilities available
-LotConfig,E,9,,"死路,处于三岔口等",Lot configuration
-LandSlope,E,9,,坡度,Slope of property
-Neighborhood,E,9,,邻居,Physical locations within Ames city limits
-Condition1,E,9,,0,Proximity to main road or railroad
-Condition2,E,9,,0,Proximity to main road or railroad (if a second is present)
-BldgType,E,9,,"住宅类型,住的家庭数,是否别墅等",Type of dwelling
-HouseStyle,E,9,,"住宅类型,隔断等",Style of dwelling
-OverallQual,E,9,,房屋的质量,Overall material and finish quality
-OverallCond,N,9,,房屋位置的质量,Overall condition rating
-YearBuilt,N,9,,建造的时间,Original construction date
-YearRemodAdd,N,0,,改造的时间,Remodel date
-RoofStyle,E,0,,屋顶的类型,Type of roof
-RoofMatl,E,0,,屋顶的材料,Roof material
-Exterior1st,E,0,,外观覆盖的材质,Exterior covering on house
-Exterior2nd,E,0,,"如果超过一种,则有第二种材质",Exterior covering on house (if more than one material)
-MasVnrType,E,0,,表层砌体类型,Masonry veneer type
-MasVnrArea,N,0,,表层砌体面积,Masonry veneer area in square feet
-ExterQual,E,0,,外观材料质量,Exterior material quality
-ExterCond,E,0,,外观材料情况,Present condition of the material on the exterior
-Foundation,E,0,,地基类型,Type of foundation
-BsmtQual,E,9,,地下室质量,Height of the basement
-BsmtCond,E,0,,地下室的基本情况,General condition of the basement
-BsmtExposure,E,0,,地下室采光,Walkout or garden level basement walls
-BsmtFinType1,E,0,,地下室的完成情况比例,Quality of basement finished area
-BsmtFinSF1,N,9,,地下室的完成面积,Type 1 finished square feet
-BsmtFinType2,E,9,,如果有多个地下室的话,Quality of second finished area (if present)
-BsmtFinSF2,N,9,,如果有多个地下室的话,Type 2 finished square feet
-BsmtUnfSF,N,0,,未完成的地下室面积,Unfinished square feet of basement area
-TotalBsmtSF,N,9,,地下室面积,Total square feet of basement area
-Heating,E,9,,供暖类型,Type of heating
-HeatingQC,E,0,,供暖质量,Heating quality and condition
-CentralAir,E,9,,是否有中央空调,Central air conditioning
-Electrical,E,0,,电气系统,Electrical system
-1stFlrSF,N,9,,1楼面积,First Floor square feet
-2ndFlrSF,N,9,,2楼面积,Second floor square feet
-LowQualFinSF,N,9,,低质量完成的面积(楼梯占用的面积),Low quality finished square feet (all floors)
-GrLivArea,N,9,,地面以上居住面积,Above grade (ground) living area square feet
-BsmtFullBath,E,0,,地下室都是洗手间,Basement full bathrooms
-BsmtHalfBath,E,0,,地下室一半是洗手间,Basement half bathrooms
-FullBath,E,0,,洗手间都在一层以上,Full bathrooms above grade
-HalfBath,E,0,,一半洗手间在一层以上,Half baths above grade
-BedroomAbvGr,E,0,,卧室都在一层以上,#N/A
-KitchenAbvGr,E,0,,厨房在一层以上,#N/A
-KitchenQual,E,9,,厨房质量,Kitchen quality
-TotRmsAbvGrd,N,0,,所有房间都在一层以上,Total rooms above grade (does not include bathrooms)
-Functional,E,0,,房屋的功能性等级,Home functionality rating
-Fireplaces,E,0,,壁炉位置,Number of fireplaces
-FireplaceQu,E,0,,壁炉质量,Fireplace quality
-GarageType,E,9,,车库类型,Garage location
-GarageYrBlt,N,0,,车库建造时间,Year garage was built
-GarageFinish,E,9,,车库的室内装修,Interior finish of the garage
-GarageCars,E,9,,车库的汽车容量,Size of garage in car capacity
-GarageArea,N,9,,车库面积,Size of garage in square feet
-GarageQual,E,0,,车库质量,Garage quality
-GarageCond,E,0,,车库情况,Garage condition
-PavedDrive,E,0,,铺路的材料,Paved driveway
-WoodDeckSF,N,0,,木地板面积,Wood deck area in square feet
-OpenPorchSF,N,9,,露天门廊面积,Open porch area in square feet
-EnclosedPorch,N,8,,独立门廊面积,Enclosed porch area in square feet
-3SsnPorch,N,0,,three season门廊面积,Three season porch area in square feet
-ScreenPorch,N,0,,纱门门廊面积,Screen porch area in square feet
-PoolArea,N,9,,游泳池面积,Pool area in square feet
-PoolQC,E,9,,游泳池质量,Pool quality
-Fence,E,0,,栅栏质量,Fence quality
-MiscFeature,E,0,,上面不包含其他功能,Miscellaneous feature not covered in other categories
-MiscVal,N,0,,上面不包含其他功能的价格,$Value of miscellaneous feature
-MoSold,N,0,,卖出月份,Month Sold
-YrSold,N,0,,卖出年份,Year Sold
-SaleType,E,0,,销售方式,Type of sale
-SaleCondition,E,0,,销售情况,Condition of sale
+字段名,类型(E:枚举  N:数值),"空值处理方式(均值(Mean),中位数(Median),众数(Mode),emtpy(数值型填充0，枚举型填充none))",特征处理方式（LB:LabelEncoder OH:OneHotEncoder）,有效属性(1:是 0:否 9:待定),权重,中文说明,英文说明
+Id,,,,,,,
+SalePrice,,,,,,售价,
+MSSubClass,E,,lb,0,,参与销售住宅的类型:有年代新旧等信息,The building class
+MSZoning,E,mode,oh,0,,"房屋类型:农用,商用等",The general zoning classification
+LotFrontage,N,mean,,0,,距离街道的距离,Linear feet of street connected to property
+LotArea,N,,,0,,房屋的面积,Lot size in square feet
+Street,E,,lb,0,,通向房屋的Street是用什么铺的,Type of road access
+Alley,E,empty,lb,0,,通向房屋的Alley是用什么铺的,Type of alley access
+LotShape,E,,lb,0,,"房屋的户型,规整程度",General shape of property
+LandContour,E,,lb,0,,房屋的平坦程度,Flatness of the property
+Utilities,E,empty,lb,0,,"设施,通不通水电气",Type of utilities available
+LotConfig,E,,lb,0,,"死路,处于三岔口等",Lot configuration
+LandSlope,E,,lb,0,,坡度,Slope of property
+Neighborhood,E,,lb,0,,邻居,Physical locations within Ames city limits
+Condition1,E,,lb,0,,0,Proximity to main road or railroad
+Condition2,E,,lb,0,,0,Proximity to main road or railroad (if a second is present)
+BldgType,E,,lb,0,,"住宅类型,住的家庭数,是否别墅等",Type of dwelling
+HouseStyle,E,,lb,0,,"住宅类型,隔断等",Style of dwelling
+OverallQual,E,,lb,1,,房屋的质量,Overall material and finish quality
+OverallCond,N,,,0,,房屋位置的质量,Overall condition rating
+YearBuilt,N,,,1,,建造的时间,Original construction date
+YearRemodAdd,N,,,1,,改造的时间,Remodel date
+RoofStyle,E,,lb,0,,屋顶的类型,Type of roof
+RoofMatl,E,,lb,0,,屋顶的材料,Roof material
+Exterior1st,E,empty,lb,0,,外观覆盖的材质,Exterior covering on house
+Exterior2nd,E,empty,lb,0,,"如果超过一种,则有第二种材质",Exterior covering on house (if more than one material)
+MasVnrType,E,empty,lb,0,,表层砌体类型,Masonry veneer type
+MasVnrArea,N,empty,,0,,表层砌体面积,Masonry veneer area in square feet
+ExterQual,E,,lb,0,,外观材料质量,Exterior material quality
+ExterCond,E,,lb,0,,外观材料情况,Present condition of the material on the exterior
+Foundation,E,,lb,0,,地基类型,Type of foundation
+BsmtQual,E,empty,lb,0,,地下室质量,Height of the basement
+BsmtCond,E,empty,lb,0,,地下室的基本情况,General condition of the basement
+BsmtExposure,E,empty,lb,0,,地下室采光,Walkout or garden level basement walls
+BsmtFinType1,E,empty,lb,0,,地下室的完成情况比例,Quality of basement finished area
+BsmtFinSF1,N,empty,,0,,地下室的完成面积,Type 1 finished square feet
+BsmtFinType2,E,empty,lb,0,,如果有多个地下室的话,Quality of second finished area (if present)
+BsmtFinSF2,N,empty,,0,,如果有多个地下室的话,Type 2 finished square feet
+BsmtUnfSF,N,empty,,0,,未完成的地下室面积,Unfinished square feet of basement area
+TotalBsmtSF,N,empty,,1,,地下室面积,Total square feet of basement area
+Heating,E,,lb,0,,供暖类型,Type of heating
+HeatingQC,E,,lb,0,,供暖质量,Heating quality and condition
+CentralAir,E,,lb,0,,是否有中央空调,Central air conditioning
+Electrical,E,empty,lb,0,,电气系统,Electrical system
+1stFlrSF,N,,,1,,1楼面积,First Floor square feet
+2ndFlrSF,N,,,0,,2楼面积,Second floor square feet
+LowQualFinSF,N,,,0,,低质量完成的面积(楼梯占用的面积),Low quality finished square feet (all floors)
+GrLivArea,N,,,1,,不含车库的室内面积,Above grade (ground) living area square feet
+BsmtFullBath,N,empty,,0,,地下室带浴缸或淋浴的盥洗室数量,Basement full bathrooms
+BsmtHalfBath,N,empty,,0,,地下室不带淋浴的盥洗室数量,Basement half bathrooms
+FullBath,N,,,1,,一层以上带浴缸或淋浴的盥洗室数量,Full bathrooms above grade
+HalfBath,N,,,0,,一层以上不带淋浴的盥洗室数量,Half baths above grade
+BedroomAbvGr,E,,lb,0,,卧室都在一层以上,#N/A
+KitchenAbvGr,E,,lb,0,,厨房在一层以上,#N/A
+KitchenQual,E,empty,lb,0,,厨房质量,Kitchen quality
+TotRmsAbvGrd,N,,,1,,地面以上的房间数目,Total rooms above grade (does not include bathrooms)
+Functional,E,empty,lb,0,,房屋的功能性等级,Home functionality rating
+Fireplaces,N,,,0,,壁炉数量,Number of fireplaces
+FireplaceQu,E,empty,lb,0,,壁炉质量,Fireplace quality
+GarageType,E,empty,lb,0,,车库类型,Garage location
+GarageYrBlt,E,empty,,0,,车库建造时间,Year garage was built
+GarageFinish,E,empty,lb,0,,车库的室内装修,Interior finish of the garage
+GarageCars,N,empty,,1,,车库的汽车容量,Size of garage in car capacity
+GarageArea,N,empty,,1,,车库面积,Size of garage in square feet
+GarageQual,E,empty,lb,0,,车库质量,Garage quality
+GarageCond,E,empty,lb,0,,车库情况,Garage condition
+PavedDrive,E,,lb,0,,铺路的材料,Paved driveway
+WoodDeckSF,N,,,0,,木地板面积,Wood deck area in square feet
+OpenPorchSF,N,,,0,,露天门廊面积,Open porch area in square feet
+EnclosedPorch,N,,,0,,独立门廊面积,Enclosed porch area in square feet
+3SsnPorch,N,,,0,,three season门廊面积,Three season porch area in square feet
+ScreenPorch,N,,,0,,纱门门廊面积,Screen porch area in square feet
+PoolArea,N,,,0,,游泳池面积,Pool area in square feet
+PoolQC,E,empty,lb,0,,游泳池质量,Pool quality
+Fence,E,empty,lb,0,,栅栏质量,Fence quality
+MiscFeature,E,empty,lb,0,,上面不包含其他功能,Miscellaneous feature not covered in other categories
+MiscVal,N,,,0,,上面不包含其他功能的价格,$Value of miscellaneous feature
+MoSold,N,,,0,,卖出月份,Month Sold
+YrSold,N,,,0,,卖出年份,Year Sold
+SaleType,E,empty,lb,0,,销售方式,Type of sale
+SaleCondition,E,,lb,0,,销售情况,Condition of sale
