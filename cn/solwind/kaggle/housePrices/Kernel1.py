@@ -1,8 +1,13 @@
-import pandas as pd
-import numpy as np
-from sklearn import preprocessing
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 import seaborn as sns
+from sklearn import preprocessing, svm
+from sklearn.decomposition import PCA
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import cross_val_score
+from sklearn.preprocessing import RobustScaler
 
 labelEncoder = preprocessing.LabelEncoder()
 oneHotEncoder = preprocessing.OneHotEncoder(sparse=False)
@@ -98,7 +103,7 @@ print("========= Feature Selection =========")
 # 计算训练集不同特性相关度 皮尔森相关系数
 corr_mat = data_train.corr()
 plt.subplots(figsize=(20, 9))
-selection_num = 10  # 选取相关度最大的特征数目
+selection_num = 20  # 选取相关度最大的特征数目
 valid_feature = corr_mat.nlargest(selection_num + 1, "SalePrice")["SalePrice"].index  # 根据SalePrice截取相关度最大的feNum个特征（不包含SalePrice）
 cm = np.corrcoef(data_train[valid_feature].values.T)
 sns.set(font_scale=1.25)
@@ -106,8 +111,26 @@ sns.set(font_scale=1.25)
 hm = sns.heatmap(cm, cbar=True, annot=True,
                  square=True, fmt=".2f", annot_kws={"size": 10}, yticklabels=valid_feature.values, xticklabels=valid_feature.values,
                  cmap="YlGnBu")
+# plt.show()
+valid_feature = valid_feature.delete(0)     # 删除SalePrice本身
 print(valid_feature)
-plt.show()
 
+# 标准化
+scaler = RobustScaler()
+data_train_scaled = scaler.fit_transform(data_train[valid_feature])
+target_train = np.log(data_train["SalePrice"])
 
+# 降维
+pca = PCA(n_components=10)
+data_train_reddim = pca.fit_transform(data_train_scaled)    # 降维后数据
 
+# 模型评估
+print("========= Modeling =========")
+# 进行模型交叉验证
+def rmse_cv(model, data, target):
+    rmse = np.sqrt(-cross_val_score(model, data, target, scoring="neg_mean_squared_error", cv=10))
+    print(type(model), rmse.mean(), rmse.std())
+
+models = [LinearRegression(), RandomForestRegressor(n_estimators=100),svm.SVR()]
+for model in models:
+    score = rmse_cv(model, data_train_reddim, target_train)
