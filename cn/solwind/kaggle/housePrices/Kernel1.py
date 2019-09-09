@@ -126,11 +126,14 @@ data_train_reddim = pca.fit_transform(data_train_scaled)    # 降维后数据
 
 # 模型评估
 print("========= Modeling =========")
+
+
 # 进行模型交叉验证
 def rmse_cv(model, data, target):
     rmse = np.sqrt(-cross_val_score(model, data, target, scoring="neg_mean_squared_error", cv=10))
     print(type(model), rmse.mean(), rmse.std())
 
-models = [LinearRegression(), RandomForestRegressor(n_estimators=100),svm.SVR()]
+
+models = [LinearRegression(), RandomForestRegressor(n_estimators=100), svm.SVR()]
 for model in models:
     score = rmse_cv(model, data_train_reddim, target_train)
