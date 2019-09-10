@@ -2,12 +2,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from sklearn import preprocessing, svm
+from sklearn import preprocessing
 from sklearn.decomposition import PCA
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import cross_val_score
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, ExtraTreesRegressor
+from sklearn.kernel_ridge import KernelRidge
+from sklearn.linear_model import LinearRegression, SGDRegressor, Ridge, Lasso, BayesianRidge, ElasticNet
+from sklearn.model_selection import cross_val_score, train_test_split
 from sklearn.preprocessing import RobustScaler
+from sklearn.svm import SVR, LinearSVR
 
 labelEncoder = preprocessing.LabelEncoder()
 oneHotEncoder = preprocessing.OneHotEncoder(sparse=False)
@@ -118,10 +120,10 @@ print(valid_feature)
 # 标准化
 scaler = RobustScaler()
 data_train_scaled = scaler.fit_transform(data_train[valid_feature])
-target_train = np.log(data_train["SalePrice"])
+target_train_log = np.log(data_train["SalePrice"])
 
 # 降维
-pca = PCA(n_components=10)
+pca = PCA(n_components=15)
 data_train_reddim = pca.fit_transform(data_train_scaled)    # 降维后数据
 
 # 模型评估
@@ -131,9 +133,22 @@ print("========= Modeling =========")
 # 进行模型交叉验证
 def rmse_cv(model, data, target):
     rmse = np.sqrt(-cross_val_score(model, data, target, scoring="neg_mean_squared_error", cv=10))
-    print(type(model), rmse.mean(), rmse.std())
+    print("Model[{}]: Mean[{:.6f}], Std[{:.4f}]".format(model.__class__.__name__, rmse.mean(), rmse.std()))
 
 
-models = [LinearRegression(), RandomForestRegressor(n_estimators=100), svm.SVR()]
-for model in models:
-    score = rmse_cv(model, data_train_reddim, target_train)
+models = [LinearRegression(), Ridge(), Lasso(alpha=0.01, max_iter=10000), RandomForestRegressor(),
+          GradientBoostingRegressor(), SVR(), LinearSVR(),
+          ElasticNet(alpha=0.001, max_iter=10000), SGDRegressor(max_iter=1000, tol=1e-3), BayesianRidge(),
+          KernelRidge(alpha=0.6, kernel='polynomial', degree=2, coef0=2.5),
+          ExtraTreesRegressor()]
+
+# for model in models:
+#     score = rmse_cv(model, data_train_reddim, target_train_log)
+
+execute_model = SVR();
+X_train, X_test, y_train, y_test = train_test_split(data_train_reddim, data_train["SalePrice"], test_size=0.33,
+                                                    random_state=42)
+# y_train = np.log(y_train)
+execute_model.fit(X_train,y_train)
+y_pred = execute_model.predict(X_test)
+print(" cost:" + str(np.sum(y_pred-y_test)/len(y_pred)))
