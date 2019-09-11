@@ -2,11 +2,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from pandas import Series
 from sklearn import preprocessing, clone
 from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, ExtraTreesRegressor
 from sklearn.kernel_ridge import KernelRidge
 from sklearn.linear_model import LinearRegression, SGDRegressor, Ridge, Lasso, BayesianRidge, ElasticNet
+from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import cross_val_score, train_test_split
 from sklearn.preprocessing import RobustScaler
 from sklearn.svm import SVR, LinearSVR
@@ -127,7 +129,7 @@ data_test_scaled = scaler.fit_transform(data_test[valid_feature])
 target_train_log = np.log(target_train)
 
 # 降维
-pca = PCA(n_components=20)
+pca = PCA(n_components=15)
 data_train_reddim = pca.fit_transform(data_train_scaled)    # 降维后数据
 data_test_reddim = pca.fit_transform(data_test_scaled)
 
@@ -135,28 +137,39 @@ data_test_reddim = pca.fit_transform(data_test_scaled)
 print("========= Modeling =========")
 # 进行模型交叉验证
 
-models = [LinearRegression(), Ridge(), Lasso(alpha=0.01, max_iter=10000), RandomForestRegressor(),
+models = [LinearRegression(), Ridge(), Lasso(alpha=0.01, max_iter=10000), RandomForestRegressor(n_estimators=400),
           GradientBoostingRegressor(), SVR(), LinearSVR(),
           ElasticNet(alpha=0.001, max_iter=10000), SGDRegressor(max_iter=1000, tol=1e-3), BayesianRidge(),
           KernelRidge(alpha=0.6, kernel='polynomial', degree=2, coef0=2.5),
           ExtraTreesRegressor()]
 
 # for model in models:
-#     score = evalUtil.rmse_cv(model, data_train_reddim, target_train_log)
+#     score = evalUtil.model_rmse_log(model, data_train_reddim, target_train)
+    # evalUtil.rmse_cv(model,data_train_reddim,target_train_log)
 
 # 训练模型
-execute_model = RandomForestRegressor(n_estimators=100)
-
+execute_model = GradientBoostingRegressor()
 # =========== test ===============
+is_log = 0
+if (is_log == 1):
+    target = target_train_log
+else:
+    target = target_train
+
 test_model = clone(execute_model)
-X_train,X_test, y_train, y_test = train_test_split(data_train_reddim, target_train, test_size=0.33, random_state=42)
+X_train,X_test, y_train, y_test = train_test_split(data_train_scaled, target, test_size=0.33, random_state=None)
 test_model.fit(X_train,y_train)
 y_predict = test_model.predict(X_test)
-evalUtil.rmse_log(y_test,y_predict)
+
+if (is_log == 1):
+    evalUtil.rmse(y_test,y_predict)
+    evalUtil.rmse_cv(test_model, X_train, y_train)
+else :
+    evalUtil.rmse_log(y_test,y_predict)
 # =========== test ===============
 
-# execute_model.fit(data_train_reddim,data_train["SalePrice"])
-# target_predict = execute_model.predict(data_test_reddim)
+# execute_model.fit(data_train_scaled,target_train)
+# target_predict = execute_model.predict(data_test_scaled)
 #
 # prediction = pd.DataFrame(target_predict, columns=['SalePrice'])
 # result = pd.concat([data_test['Id'], prediction], axis=1)

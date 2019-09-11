@@ -8,8 +8,10 @@ from sklearn.neighbors import KNeighborsClassifier
 
 data_iris = load_boston()
 X=data_iris.data
-print(X[:,4])
-print(data_iris.feature_names)
+# print(X[:,4])
+# print(data_iris.feature_names)
 Y=data_iris.target
-print(Y)
+# print(Y)
 
+data =np.random.randn(7,4)
+print(data < 0)
