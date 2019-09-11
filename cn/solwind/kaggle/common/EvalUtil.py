@@ -21,7 +21,7 @@ def rmse_log(y_data, y_predict):
 
 # 模型均方根差
 def model_rmse(model, data, target):
-    X_train, X_test, y_train, y_test = train_test_split(data, target, test_size=0.33, random_state=1)
+    X_train, X_test, y_train, y_test = train_test_split(data, target, test_size=0.33, random_state=None)
     model.fit(X_train, y_train)
     y_predict = model.predict(X_test)
     score = rmse(y_test, y_predict)
@@ -31,7 +31,7 @@ def model_rmse(model, data, target):
 
 # 模型均方根差，传入数据取log后计算
 def model_rmse_log(model, data, target):
-    X_train, X_test, y_train, y_test = train_test_split(data, target, test_size=0.33, random_state=1)
+    X_train, X_test, y_train, y_test = train_test_split(data, target, test_size=0.33, random_state=None)
     model.fit(X_train, y_train)
     y_predict = model.predict(X_test)
     score = rmse_log(y_test, y_predict)

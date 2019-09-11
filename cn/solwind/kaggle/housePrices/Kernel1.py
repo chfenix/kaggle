@@ -166,6 +166,9 @@ if (is_log == 1):
     evalUtil.rmse_cv(test_model, X_train, y_train)
 else :
     evalUtil.rmse_log(y_test,y_predict)
+
+
+evalUtil.model_rmse_log(test_model, data_train_scaled, target)
 # =========== test ===============
 
 # execute_model.fit(data_train_scaled,target_train)
