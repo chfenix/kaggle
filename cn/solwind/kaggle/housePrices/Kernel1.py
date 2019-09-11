@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from sklearn import preprocessing
+from sklearn import preprocessing, clone
 from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, ExtraTreesRegressor
 from sklearn.kernel_ridge import KernelRidge
@@ -10,6 +10,8 @@ from sklearn.linear_model import LinearRegression, SGDRegressor, Ridge, Lasso, B
 from sklearn.model_selection import cross_val_score, train_test_split
 from sklearn.preprocessing import RobustScaler
 from sklearn.svm import SVR, LinearSVR
+
+import cn.solwind.kaggle.common.EvalUtil as evalUtil
 
 labelEncoder = preprocessing.LabelEncoder()
 oneHotEncoder = preprocessing.OneHotEncoder(sparse=False)
@@ -26,8 +28,9 @@ print("======Data Test Shape======\n", data_test.shape)
 data_full = pd.concat([data_train, data_test], axis=0, sort=True)
 
 # 查看SalePrice数据概览
-print("======SalePrice Desc======\n", data_train["SalePrice"].describe())
-print("======SalePrice Empty======\n" + str(data_train["SalePrice"].isnull().sum()))
+target_train = data_train["SalePrice"]
+print("======SalePrice Desc======\n", target_train.describe())
+print("======SalePrice Empty======\n" + str(target_train.isnull().sum()))
 # 查看SalePrice分布情况
 # sns.distplot(data_train["SalePrice"])
 
@@ -120,21 +123,17 @@ print(valid_feature)
 # 标准化
 scaler = RobustScaler()
 data_train_scaled = scaler.fit_transform(data_train[valid_feature])
-target_train_log = np.log(data_train["SalePrice"])
+data_test_scaled = scaler.fit_transform(data_test[valid_feature])
+target_train_log = np.log(target_train)
 
 # 降维
-pca = PCA(n_components=15)
+pca = PCA(n_components=20)
 data_train_reddim = pca.fit_transform(data_train_scaled)    # 降维后数据
+data_test_reddim = pca.fit_transform(data_test_scaled)
 
 # 模型评估
 print("========= Modeling =========")
-
-
 # 进行模型交叉验证
-def rmse_cv(model, data, target):
-    rmse = np.sqrt(-cross_val_score(model, data, target, scoring="neg_mean_squared_error", cv=10))
-    print("Model[{}]: Mean[{:.6f}], Std[{:.4f}]".format(model.__class__.__name__, rmse.mean(), rmse.std()))
-
 
 models = [LinearRegression(), Ridge(), Lasso(alpha=0.01, max_iter=10000), RandomForestRegressor(),
           GradientBoostingRegressor(), SVR(), LinearSVR(),
@@ -143,12 +142,23 @@ models = [LinearRegression(), Ridge(), Lasso(alpha=0.01, max_iter=10000), Random
           ExtraTreesRegressor()]
 
 # for model in models:
-#     score = rmse_cv(model, data_train_reddim, target_train_log)
+#     score = evalUtil.rmse_cv(model, data_train_reddim, target_train_log)
 
-execute_model = SVR();
-X_train, X_test, y_train, y_test = train_test_split(data_train_reddim, data_train["SalePrice"], test_size=0.33,
-                                                    random_state=42)
-# y_train = np.log(y_train)
-execute_model.fit(X_train,y_train)
-y_pred = execute_model.predict(X_test)
-print(" cost:" + str(np.sum(y_pred-y_test)/len(y_pred)))
+# 训练模型
+execute_model = RandomForestRegressor(n_estimators=100)
+
+# =========== test ===============
+test_model = clone(execute_model)
+X_train,X_test, y_train, y_test = train_test_split(data_train_reddim, target_train, test_size=0.33, random_state=42)
+test_model.fit(X_train,y_train)
+y_predict = test_model.predict(X_test)
+evalUtil.rmse_log(y_test,y_predict)
+# =========== test ===============
+
+# execute_model.fit(data_train_reddim,data_train["SalePrice"])
+# target_predict = execute_model.predict(data_test_reddim)
+#
+# prediction = pd.DataFrame(target_predict, columns=['SalePrice'])
+# result = pd.concat([data_test['Id'], prediction], axis=1)
+# # 保存预测结果
+# result.to_csv('./data/Predictions.csv', index=False)
