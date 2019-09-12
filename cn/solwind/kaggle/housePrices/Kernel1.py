@@ -4,16 +4,19 @@ import pandas as pd
 import seaborn as sns
 from pandas import Series
 from sklearn import preprocessing, clone
+from sklearn.base import BaseEstimator, RegressorMixin
 from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, ExtraTreesRegressor
 from sklearn.kernel_ridge import KernelRidge
 from sklearn.linear_model import LinearRegression, SGDRegressor, Ridge, Lasso, BayesianRidge, ElasticNet
 from sklearn.metrics import mean_squared_error
-from sklearn.model_selection import cross_val_score, train_test_split
+from sklearn.model_selection import cross_val_score, train_test_split, GridSearchCV
 from sklearn.preprocessing import RobustScaler
 from sklearn.svm import SVR, LinearSVR
 
 import cn.solwind.kaggle.common.EvalUtil as evalUtil
+# from cn.solwind.kaggle.common.AverageWeight import AverageWeight
+from cn.solwind.kaggle.common.AverageWeight import AverageWeight
 
 labelEncoder = preprocessing.LabelEncoder()
 oneHotEncoder = preprocessing.OneHotEncoder(sparse=False)
@@ -121,22 +124,20 @@ hm = sns.heatmap(cm, cbar=True, annot=True,
 # plt.show()
 valid_feature = valid_feature.delete(0)     # 删除SalePrice本身
 print(valid_feature)
-
+valid_feature=['OverallQual','GrLivArea', 'GarageCars','TotalBsmtSF', 'FullBath', 'TotRmsAbvGrd', 'YearBuilt']
 # 标准化
 scaler = RobustScaler()
 data_train_scaled = scaler.fit_transform(data_train[valid_feature])
 data_test_scaled = scaler.fit_transform(data_test[valid_feature])
-target_train_log = np.log(target_train)
 
 # 降维
 pca = PCA(n_components=15)
-data_train_reddim = pca.fit_transform(data_train_scaled)    # 降维后数据
-data_test_reddim = pca.fit_transform(data_test_scaled)
+# data_train_pca = pca.fit_transform(data_train_scaled)    # 降维后数据
+# data_test_pca = pca.fit_transform(data_test_scaled)
 
 # 模型评估
 print("========= Modeling =========")
 # 进行模型交叉验证
-
 models = [LinearRegression(), Ridge(), Lasso(alpha=0.01, max_iter=10000), RandomForestRegressor(n_estimators=400),
           GradientBoostingRegressor(), SVR(), LinearSVR(),
           ElasticNet(alpha=0.001, max_iter=10000), SGDRegressor(max_iter=1000, tol=1e-3), BayesianRidge(),
@@ -144,37 +145,33 @@ models = [LinearRegression(), Ridge(), Lasso(alpha=0.01, max_iter=10000), Random
           ExtraTreesRegressor()]
 
 # for model in models:
-#     score = evalUtil.model_rmse_log(model, data_train_reddim, target_train)
-    # evalUtil.rmse_cv(model,data_train_reddim,target_train_log)
+#     evalUtil.model_rmse_log(model,data_train_scaled,target_train)
+
+# 模型调参
+# model = RandomForestRegressor()
+# grid_search = GridSearchCV(model,{"n_estimators":[100,200,300,400]},cv=5, scoring="neg_mean_squared_log_error")
+# grid_search.fit(data_train_scaled,target_train)
+# print(grid_search.best_params_, grid_search.best_score_ )
+
+# 模型集成
+# Model[RandomForestRegressor]: Score(log)[0.167911]
+# Model[GradientBoostingRegressor]: Score(log)[0.153769]
+# Model[KernelRidge]: Score(log)[0.174150]
+models = [RandomForestRegressor(n_estimators=400), GradientBoostingRegressor(), KernelRidge(alpha=0.6, kernel='polynomial', degree=2, coef0=2.5)]
+weights = [0.35, 0.5, 0.15]
+
+weight_avg = AverageWeight(models, weights)
+evalUtil.model_rmse_log(weight_avg, data_train_scaled, target_train)
+# evalUtil.rmse_cv_log(weight_avg,data_train_scaled,target_train)
 
 # 训练模型
-execute_model = GradientBoostingRegressor()
-# =========== test ===============
-is_log = 0
-if (is_log == 1):
-    target = target_train_log
-else:
-    target = target_train
+execute_model = weight_avg
+execute_model.fit(data_train_scaled,target_train)
 
-test_model = clone(execute_model)
-X_train,X_test, y_train, y_test = train_test_split(data_train_scaled, target, test_size=0.33, random_state=None)
-test_model.fit(X_train,y_train)
-y_predict = test_model.predict(X_test)
+# 生成提交数据
+target_predict = execute_model.predict(data_test_scaled)
 
-if (is_log == 1):
-    evalUtil.rmse(y_test,y_predict)
-    evalUtil.rmse_cv(test_model, X_train, y_train)
-else :
-    evalUtil.rmse_log(y_test,y_predict)
-
-
-evalUtil.model_rmse_log(test_model, data_train_scaled, target)
-# =========== test ===============
-
-# execute_model.fit(data_train_scaled,target_train)
-# target_predict = execute_model.predict(data_test_scaled)
-#
-# prediction = pd.DataFrame(target_predict, columns=['SalePrice'])
-# result = pd.concat([data_test['Id'], prediction], axis=1)
-# # 保存预测结果
-# result.to_csv('./data/Predictions.csv', index=False)
+prediction = pd.DataFrame(target_predict, columns=['SalePrice'])
+result = pd.concat([data_test['Id'], prediction], axis=1)
+# 保存预测结果
+result.to_csv('./data/Predictions.csv', index=False)
