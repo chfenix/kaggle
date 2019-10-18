@@ -5,6 +5,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from pandas import Series
 
-test = 1987
-test = test.astype("object")
-print(test)
+import seaborn as sns
+import matplotlib.pyplot as plt
+titanic = sns.load_dataset("titanic")
+sns.countplot(x="sex", hue="survived", data=titanic)
+plt.show()

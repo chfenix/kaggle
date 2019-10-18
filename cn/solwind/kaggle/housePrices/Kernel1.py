@@ -89,6 +89,7 @@ for line in f_pro_des.readlines():
         data_train[pro_name].fillna(data_full[pro_name].median(), inplace=True)
         data_test[pro_name].fillna(data_full[pro_name].median(), inplace=True)
 
+    # 众数填充
     if pro_null.lower() == "mode":
         data_train[pro_name].fillna(data_full[pro_name].mode().iloc[0], inplace=True)
         data_test[pro_name].fillna(data_full[pro_name].mode().iloc[0], inplace=True)
