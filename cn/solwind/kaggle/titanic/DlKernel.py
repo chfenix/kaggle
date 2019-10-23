@@ -11,7 +11,7 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 1000)
 
 # 隐层节点数
-HIDDEN_LAYER_POINT_NUM = 5
+HIDDEN_LAYER_POINT_NUM = 10
 # 输入特征数
 FEATURE_NUM = 11
 # 输出结果数
@@ -21,9 +21,9 @@ TRAIN_STEP = 10000
 # 学习率
 TRAIN_LEARN_RATE = 0.07
 # dropout时随机保留神经元的比例
-DROPOUT_RATE = 0.9
+DROPOUT_RATE = 0.8
 # 是否使用DROPOUT层
-BOL_DROPOUT = False
+BOL_DROPOUT = True
 # 是否保存训练结果
 BOL_SAVE_CHECKPOINT = True
 
