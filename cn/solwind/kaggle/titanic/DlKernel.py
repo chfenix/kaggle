@@ -11,7 +11,7 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 1000)
 
 # 隐层节点数
-HIDDEN_LAYER_POINT_NUM = 100
+HIDDEN_LAYER_POINT_NUM = 5
 # 输入特征数
 FEATURE_NUM = 11
 # 输出结果数
@@ -19,7 +19,7 @@ RESULT_NUM = 2
 # 迭代次数
 TRAIN_STEP = 10000
 # 学习率
-TRAIN_LEARN_RATE = 0.9
+TRAIN_LEARN_RATE = 0.07
 # dropout时随机保留神经元的比例
 DROPOUT_RATE = 0.9
 # 是否使用DROPOUT层
@@ -108,9 +108,9 @@ def load_dataset():
     return data_train,data_test
 
 data_train,data_test = load_dataset()
-# print(data_train.head())
-# print(data_train.values[:, 0:2])
-# print("###################")
+print(data_train.head())
+print(data_train.values[:, 0:2])
+print("###################")
 
 # 初始化权重
 def init_weights(shape):
@@ -142,6 +142,7 @@ def variable_summaries(var):
         tf.compat.v1.summary.scalar("max", tf.reduce_max(var))
         tf.compat.v1.summary.scalar("min", tf.reduce_min(var))
         # 用直方图记录参数的分布
+        # 在eventlog目录级别cn\solwind\kaggle\titanic> 通过tensorboard --logdir=eventlog/启动tensorboard，浏览器使用localhost:6006访问（注意看命令返回端口，文件扩展名为机器名称，不影响localhost访问
         tf.compat.v1.summary.histogram("histogram", var)
 
 # 创建神经网络层 @param:输入数据，本层节点数，下一层节点数，层名称，激活函数
@@ -170,9 +171,9 @@ def create_nn_layer(input_tensor, input_dim, output_dim, layer_name, act=tf.nn.r
     # 返回激励层的最终输出
     return activations
 
+
 # 创建隐层
 layerHidden1 = create_nn_layer(inputData, FEATURE_NUM, HIDDEN_LAYER_POINT_NUM, "layerHidden1")
-
 # 创建dropout层
 with tf.name_scope('dropout'):
     keep_prob = tf.compat.v1.placeholder(tf.float32, name="keep_prob")
@@ -275,3 +276,30 @@ test_writer.close()
 if BOL_SAVE_CHECKPOINT:
     saver = tf.train.Saver()
     save_path = saver.save(sess, "./model/titanic")
+
+def predict(image_data):
+    # 恢复神经网络训练图及数据
+    with tf.Session() as sess:
+        saver = tf.train.import_meta_graph('./model/titanic.meta')
+        saver.restore(sess, tf.train.latest_checkpoint('./model'))
+
+        graph = tf.get_default_graph()
+
+        # 恢复输入占位符
+        restore_input_data = graph.get_tensor_by_name("input/inputData:0")
+        # 恢复dropout占位符
+        restore_keep_prob = graph.get_tensor_by_name("dropout/keep_prob:0")
+
+        # 恢复预测算法
+        restore_predict = graph.get_tensor_by_name("layerOutput/activation:0")
+
+        # 预测结果
+        result = sess.run(tf.argmax(restore_predict, 1),
+                          feed_dict={restore_input_data: np.mat(image_data), restore_keep_prob: 1.0})
+
+        return result
+
+result = predict(data_test.values[:,1:])
+prediction = pd.DataFrame(result, columns=['Survived'])
+result = pd.concat([data_test["PassengerId"], prediction], axis=1)
+result.to_csv('./data/TFPredictions.csv', index=False)
