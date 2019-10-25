@@ -111,7 +111,7 @@ def crwalOdds():
                 break
             arrOdds = line.split("=")
             type = arrOdds[0][9:10]
-            gid = arrOdds[0][11:18]
+            gid = arrOdds[0][11:18].replace("]","")
             arrGOdds = arrOdds[1].replace("]]", "").replace("[[", "").split("],[")
             for godds in arrGOdds:
                 odds = godds.split(",")
@@ -124,7 +124,7 @@ def crwalOdds():
         j = 38
         while j >= 1:
             try:
-                url = getOddsUrl(i, 38)
+                url = getOddsUrl(i, j)
                 print("Get Odds Data from Url[%s]" % (url))
                 headers["Referer"] = "http://zq.win007.com/cn/League/%s-%s/36.html" % (i, i + 1)
                 print(headers)
@@ -134,17 +134,17 @@ def crwalOdds():
                 print(dfRoundOdds.head())
                 # 写入文件
                 dfRoundOdds.to_csv('./data/ENG_PR/odds.csv', index=False, mode='a', header=False)
-                i -= 1
-                j -= 1
+                j = j - 1
             except Exception as e:
                 print('traceback.format_exc():\n%s' % traceback.format_exc())
 
             time.sleep(random.randint(3, 5))
+        i -= 1
 # ===========================赔率数据处理===========================
 # 抓取赛程数据
 # crwalMatch()
 # 抓取赔率数据
-crwalOdds()
+# crwalOdds()
 
 
 
